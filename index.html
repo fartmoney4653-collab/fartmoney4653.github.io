@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Content Viewer</title>
+    <style>
+        body { margin: 0; padding: 0; }
+        iframe { width: 100%; height: 100vh; border: none; }
+    </style>
+</head>
+<body>
+    <iframe id="contentFrame"></iframe>
+
+    <script>
+        const url = "https://cdn.jsdelivr.net/gh/NoahsAmazingTutoringHelp/reimagined-octo-winner/blahblahblah.html";
+        const baseUrl = url.substring(0, url.lastIndexOf('/') + 1);
+        
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                const iframe = document.getElementById('contentFrame');
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+                
+                iframeDoc.open();
+                iframeDoc.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <base href="${baseUrl}">
+                    </head>
+                    <body>
+                        ${html}
+                    </body>
+                    </html>
+                `);
+                iframeDoc.close();
+            })
+            .catch(error => {
+                document.body.innerHTML = `<p>Error loading content: ${error.message}</p>`;
+            });
+    </script>
+</body>
+</html>
